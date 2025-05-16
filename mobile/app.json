@@ -4,7 +4,6 @@
     "slug": "mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "mobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -14,9 +13,7 @@
     "android": {
       "package": "com.cupom.appcupom",
       "googleServicesFile": "./google-services.json",
-
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true
@@ -31,7 +28,6 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -39,11 +35,7 @@
       ],
       [
         "@react-native-google-signin/google-signin",
-        
         {
-          "android": {
-            "certificateHash": "SHA1_HASH_AQUI" 
-          },
           "iosUrlScheme": "com.googleusercontent.apps._some_id_here_"
         }
       ]
