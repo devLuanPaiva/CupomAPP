@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "mobile",
+    "name": "appcupom",
     "slug": "mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,6 +12,9 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.cupom.appcupom",
+      "googleServicesFile": "./google-services.json",
+
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -36,7 +39,11 @@
       ],
       [
         "@react-native-google-signin/google-signin",
+        
         {
+          "android": {
+            "certificateHash": "SHA1_HASH_AQUI" 
+          },
           "iosUrlScheme": "com.googleusercontent.apps._some_id_here_"
         }
       ]
