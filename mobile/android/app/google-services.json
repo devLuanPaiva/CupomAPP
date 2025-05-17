@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "85958265034",
+    "project_id": "cupomapp-694ff",
+    "storage_bucket": "cupomapp-694ff.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85958265034:android:6f195acd61faf361490c33",
+        "android_client_info": {
+          "package_name": "com.anonymous.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmL6nJWURiB12QkuOFwz3p5S48_azvxOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85958265034:android:0b9ca7a82bff0bec490c33",
+        "android_client_info": {
+          "package_name": "com.cupom.appcupom"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmL6nJWURiB12QkuOFwz3p5S48_azvxOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
