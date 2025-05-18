@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { getAuth, FirebaseAuthTypes, signInWithCredential, GoogleAuthProvider, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut } from '@react-native-firebase/auth';
 
 type User = FirebaseAuthTypes.User | null;
 
@@ -19,6 +19,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User>(null);
     const [loading, setLoading] = useState(true);
     const [isGoogleSigningIn, setIsGoogleSigningIn] = useState(false);
+    const auth = getAuth();
+
     useEffect(() => {
         GoogleSignin.configure({
             webClientId: '',
@@ -26,55 +28,70 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             forceCodeForRefreshToken: true,
         });
     }, []);
+
     useEffect(() => {
-        const subscriber = auth().onAuthStateChanged((authUser) => {
+        const subscriber = onAuthStateChanged(auth, (authUser) => {
             setUser(authUser);
             setLoading(false);
         });
 
         return subscriber;
-    }, []);
+    }, [auth]);
 
     const signInWithGoogle = useCallback(async () => {
-         if (isGoogleSigningIn) return; 
+        if (isGoogleSigningIn) return;
         setIsGoogleSigningIn(true);
+        setLoading(true);
+
         try {
             await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-            const userInfor = await GoogleSignin.signIn();
+            await GoogleSignin.signOut(); 
 
-            const googleCredential = auth.GoogleAuthProvider.credential(userInfor.data!.idToken)
-            await auth().signInWithCredential(googleCredential);
+            const userInfo = await GoogleSignin.signIn();
+            const idToken = userInfo?.data?.idToken;
+
+            if (!idToken) {
+                throw new Error('No ID token received from Google Sign-In');
+            }
+
+            const credential = GoogleAuthProvider.credential(idToken);
+            await signInWithCredential(auth, credential).then((userCredentials) => {
+                setUser(userCredentials.user);
+            });
+
         } catch (error) {
             console.error('Google Sign-In Error:', error);
-            setLoading(false);
+            await GoogleSignin.signOut();
             throw error;
-        }finally {
-        setIsGoogleSigningIn(false);
-        setLoading(false);
-    }
+        } finally {
+            setIsGoogleSigningIn(false);
+            setLoading(false);
+        }
+    }, [isGoogleSigningIn, auth]);
 
-    }, [setLoading, isGoogleSigningIn]);
 
     const signUp = useCallback(async (email: string, password: string) => {
-        await auth().createUserWithEmailAndPassword(email, password);
-    }, []);
+        await createUserWithEmailAndPassword(auth, email, password)
+    }, [auth]);
 
     const signIn = useCallback(async (email: string, password: string) => {
-        await auth().signInWithEmailAndPassword(email, password);
-    }, []);
-
+        await signInWithEmailAndPassword(auth, email, password).then((userCredentials) => {
+            const user = userCredentials.user;
+            setUser(user);
+        });
+    }, [auth]);
 
     const signOut = useCallback(async () => {
         try {
             setLoading(true);
             await GoogleSignin.signOut();
-            await auth().signOut();
+            await firebaseSignOut(auth);
         } catch (error) {
             console.error('Sign Out Error:', error);
             setLoading(false);
             throw error;
         }
-    }, [setLoading]);
+    }, [auth, setLoading]);
 
     const values = useMemo(() => {
         return {
@@ -84,14 +101,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             signOut,
             signIn,
             signUp,
-
         };
-    }, [user, loading, signInWithGoogle,
-        signOut, signIn, signUp
-    ]);
+    }, [user, loading, signInWithGoogle, signOut, signIn, signUp]);
+
     return (
-        <AuthContext.Provider
-            value={values}>
+        <AuthContext.Provider value={values}>
             {children}
         </AuthContext.Provider>
     );
