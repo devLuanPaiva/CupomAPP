@@ -1,3 +1,4 @@
+import { AuthProvider } from '@/contexts/AuthContext'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
@@ -10,9 +11,12 @@ export default function RootLayout() {
   }, [])
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(auth)" />
-      <Stack.Screen name="index" /> 
-    </Stack>
+    <AuthProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="index" />
+         <Stack.Screen name="home" /> 
+      </Stack>
+    </AuthProvider>
   )
 }
