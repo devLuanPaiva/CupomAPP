@@ -18,6 +18,7 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User>(null);
     const [loading, setLoading] = useState(true);
+    const [isGoogleSigningIn, setIsGoogleSigningIn] = useState(false);
     useEffect(() => {
         GoogleSignin.configure({
             webClientId: '85958265034-8kkebja5dt53lapuhai8u42pls2fpcmk.apps.googleusercontent.com',
@@ -35,6 +36,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     const signInWithGoogle = useCallback(async () => {
+         if (isGoogleSigningIn) return; 
+        setIsGoogleSigningIn(true);
         try {
             await GoogleSignin.hasPlayServices();
             const userInfor = await GoogleSignin.signIn();
@@ -44,8 +47,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             console.error('Google Sign-In Error:', error);
             setLoading(false);
             throw error;
-        }
-    }, [setLoading]);
+        }finally {
+        setIsGoogleSigningIn(false);
+        setLoading(false);
+    }
+
+    }, [setLoading, isGoogleSigningIn]);
 
     const signUp = useCallback(async (email: string, password: string) => {
         await auth().createUserWithEmailAndPassword(email, password);
