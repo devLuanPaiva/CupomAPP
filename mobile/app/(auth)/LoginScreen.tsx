@@ -7,14 +7,14 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { signIn, signUp, signInWithGoogle, user } = useAuth()
- const router = useRouter();
+  const { signIn, signUp, signInWithGoogle, user, loading } = useAuth()
+  const router = useRouter();
 
   useEffect(() => {
     if (user) {
       router.replace('/home/HomeScreen');
     }
-  }, [user]);
+  }, [user, router]);
   return (
     <View style={styles.container}>
       <TextInput
@@ -32,19 +32,30 @@ export default function LoginScreen() {
         onChangeText={setPassword}
       />
 
-      <Pressable style={styles.emailButton} onPress={() => signIn(email, password)}>
+      <Pressable
+        style={styles.emailButton}
+        onPress={() => signIn(email, password)}
+        disabled={loading}
+      >
         <Text style={styles.emailButtonText}>Entrar</Text>
       </Pressable>
 
-      <Pressable style={styles.emailButton} onPress={() => signUp(email, password)}>
+      <Pressable
+        style={styles.emailButton}
+        onPress={() => signUp(email, password)}
+        disabled={loading}
+      >
         <Text style={styles.emailButtonText}>Registrar</Text>
       </Pressable>
 
-      <Text style={styles.orText}>OU</Text>
-
-      <Pressable style={styles.googleButton} onPress={signInWithGoogle}>
+      <Pressable
+        style={styles.googleButton}
+        onPress={signInWithGoogle}
+        disabled={loading}
+      >
         <Text style={styles.googleButtonText}>Entrar com Google</Text>
       </Pressable>
+
     </View>
   )
 }
