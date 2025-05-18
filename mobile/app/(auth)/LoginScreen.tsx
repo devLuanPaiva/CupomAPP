@@ -7,7 +7,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { signIn, signUp, signInWithGoogle, user, loading } = useAuth()
+  const { signIn, signUp, signInWithGoogle, user} = useAuth()
   const router = useRouter();
 
   useEffect(() => {
@@ -35,7 +35,6 @@ export default function LoginScreen() {
       <Pressable
         style={styles.emailButton}
         onPress={() => signIn(email, password)}
-        disabled={loading}
       >
         <Text style={styles.emailButtonText}>Entrar</Text>
       </Pressable>
@@ -43,7 +42,6 @@ export default function LoginScreen() {
       <Pressable
         style={styles.emailButton}
         onPress={() => signUp(email, password)}
-        disabled={loading}
       >
         <Text style={styles.emailButtonText}>Registrar</Text>
       </Pressable>
@@ -51,7 +49,6 @@ export default function LoginScreen() {
       <Pressable
         style={styles.googleButton}
         onPress={signInWithGoogle}
-        disabled={loading}
       >
         <Text style={styles.googleButtonText}>Entrar com Google</Text>
       </Pressable>
