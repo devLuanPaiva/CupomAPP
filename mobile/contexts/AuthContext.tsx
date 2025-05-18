@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isGoogleSigningIn, setIsGoogleSigningIn] = useState(false);
     useEffect(() => {
         GoogleSignin.configure({
-            webClientId: '85958265034-8kkebja5dt53lapuhai8u42pls2fpcmk.apps.googleusercontent.com',
+            webClientId: '',
             offlineAccess: true,
             forceCodeForRefreshToken: true,
         });
@@ -39,8 +39,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
          if (isGoogleSigningIn) return; 
         setIsGoogleSigningIn(true);
         try {
-            await GoogleSignin.hasPlayServices();
+            await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
             const userInfor = await GoogleSignin.signIn();
+
             const googleCredential = auth.GoogleAuthProvider.credential(userInfor.data!.idToken)
             await auth().signInWithCredential(googleCredential);
         } catch (error) {
